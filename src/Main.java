@@ -5,30 +5,48 @@ import java.sql.*;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
+    Kund activUser;
+
     public Main (){
         Repository repository = Repository.getInstance();
 
-        if(inloggning()){
 
-        }
+        activUser = inloggning();
+
+
+
 
 
     }
 
-    private boolean inloggning (){
+    private Kund inloggning (){
 
         Repository repository = Repository.getInstance();
 
-        String potentialUser = JOptionPane.showInputDialog(null, "ange användarnamn");
+        while(true){
+            String potentialUser = JOptionPane.showInputDialog(null, "ange användarnamn");
+            int passwordRetry = 0;
 
-        if (repository.checkForUser(potentialUser)){
+            if (repository.checkForUser(potentialUser)){
 
-            String presentedPassword = JOptionPane.showInputDialog(null, "ange lösenord");
+                while (passwordRetry < 3){
 
-            if (repository.checkForPassword(potentialUser, presentedPassword)){
+                    String presentedPassword = JOptionPane.showInputDialog(null, "ange lösenord");
+
+                    //Lägg till möjlighet att avsluta
+
+                    if (repository.checkForPassword(potentialUser, presentedPassword)){
+                        return repository.getAuthenticatedUser(potentialUser);
+                    }
+                    passwordRetry++;
+                    JOptionPane.showMessageDialog(null, "Lösenordet du angett är inkorrekt");
+
+                }
 
             }
         }
+
+
     }
 
 

@@ -138,10 +138,16 @@ public class Repository {
                 String name = rs.getString(3);
                 String lastname = rs.getString(4);
                 String userName = rs.getString(5);
-                int activOrder = rs.getInt(7);
+                String activeOrder = rs.getString(7);
+                if (rs.wasNull()) {
+                    System.out.println("null flag");
+                    // handle NULL field value
+                }
+
 
                 if(username.equals(userName)){
-                    Kund kund = new Kund(id, ort, name, lastname, username, activOrder);
+                    Kund kund = new Kund(id, ort, name, lastname, username, activeOrder);
+                    System.out.println(id +ort +name +lastname +userName +activeOrder);
                     return kund;
                 }
             }

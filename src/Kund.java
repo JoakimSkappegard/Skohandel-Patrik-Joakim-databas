@@ -4,9 +4,9 @@ public class Kund {
     String name;
     String lastname;
     String userName;
-    int activOrder;
+    String activOrder;
 
-    public Kund(int id, String ort, String name, String lastname, String userName, int activOrder) {
+    public Kund(int id, String ort, String name, String lastname, String userName, String activOrder) {
         this.id = id;
         this.ort = ort;
         this.name = name;
