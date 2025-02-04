@@ -104,7 +104,9 @@ public class Repository {
                 String knownPassword = rs.getString(2);
 
                 if(username.equals(knownUser)){
-                    return password.equals(knownPassword);
+                    if (password.equals(knownPassword)){
+                        return true;
+                    }
                 }
 
             }

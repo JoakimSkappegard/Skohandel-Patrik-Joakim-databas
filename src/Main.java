@@ -9,13 +9,15 @@ public class Main {
         Repository repository = Repository.getInstance();
 
         String potentialUser = JOptionPane.showInputDialog(null, "ange användarnamn");
-        if(repository.checkForUser(potentialUser)){
+
+        if (repository.checkForUser(potentialUser)){
+
             String presentedPassword = JOptionPane.showInputDialog(null, "ange lösenord");
 
+            if (repository.checkForPassword(potentialUser, presentedPassword)){
+
+            }
         }
-
-
-
     }
 
 
