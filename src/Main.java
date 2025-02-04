@@ -8,6 +8,17 @@ public class Main {
     public Main (){
         Repository repository = Repository.getInstance();
 
+        if(inloggning()){
+
+        }
+
+
+    }
+
+    private boolean inloggning (){
+
+        Repository repository = Repository.getInstance();
+
         String potentialUser = JOptionPane.showInputDialog(null, "ange användarnamn");
 
         if (repository.checkForUser(potentialUser)){
@@ -19,7 +30,6 @@ public class Main {
             }
         }
     }
-
 
 
 

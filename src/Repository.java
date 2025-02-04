@@ -76,11 +76,15 @@ public class Repository {
 
             while (rs.next()){
                 String knownUser = rs.getString(1);
+                System.out.println(knownUser);
 
                 if(username.equals(knownUser)){
+                    System.out.println("användare funnen");
                     return true;
                 }
             }
+
+            System.out.println("Användaren finns ej i systemet");
 
             return false;
 
@@ -90,7 +94,7 @@ public class Repository {
         }
     }
 
-    public boolean checkForPassword(String username, String password){
+    public boolean checkForPassword(String username, String givenPassword){
         try{
             Connection con = DriverManager.getConnection(url, user,password);
 
@@ -104,11 +108,11 @@ public class Repository {
                 String knownPassword = rs.getString(2);
 
                 if(username.equals(knownUser)){
-                    if (password.equals(knownPassword)){
+                    if (givenPassword.equals(knownPassword)){
+                        System.out.println("godkänt lösenord");
                         return true;
                     }
                 }
-
             }
 
             return false;
