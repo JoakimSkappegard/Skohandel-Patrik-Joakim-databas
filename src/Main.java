@@ -10,10 +10,41 @@ public class Main {
     public Main (){
         Repository repository = Repository.getInstance();
 
+        System.out.println(meny());
 
         activUser = inloggning();
 
+        while (true){
+            repository.presentCurrentOrder(activUser.activOrder);
 
+            switch(meny()){
+                case -1, 3:
+                    //avsluta
+                    break;
+                case 0:
+                    //lägg till
+                    break;
+                case 1:
+                    //betala
+                    break;
+                case 2:
+                    //logga ut
+                    break;
+            }
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+        // pressentera lista
 
 
 
@@ -79,7 +110,12 @@ public class Main {
     }
 
 
+    public int meny (){
+        Object[] options = {"Lägg till i order", "Betala activ order", "logga ut", "avsluta"};
 
+        int result = JOptionPane.showOptionDialog(null,"Vad önskar du göra?","", JOptionPane.YES_NO_OPTION,3, null,options,options[0]);
+        return result;
+    }
 
 
 
