@@ -140,14 +140,14 @@ public class Repository {
                 String userName = rs.getString(5);
                 String activeOrder = rs.getString(7);
                 if (rs.wasNull()) {
-                    System.out.println("null flag");
+                    //System.out.println("null flag");
                     // handle NULL field value
                 }
 
 
                 if(username.equals(userName)){
                     Kund kund = new Kund(id, ort, name, lastname, username, activeOrder);
-                    System.out.println(id +ort +name +lastname +userName +activeOrder);
+                    //System.out.println(id +ort +name +lastname +userName +activeOrder);
                     return kund;
                 }
             }

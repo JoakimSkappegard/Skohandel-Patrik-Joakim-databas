@@ -17,6 +17,8 @@ public class Main {
 
 
 
+
+
     }
 
     private Kund inloggning (){
@@ -24,29 +26,56 @@ public class Main {
         Repository repository = Repository.getInstance();
 
         while(true){
-            String potentialUser = JOptionPane.showInputDialog(null, "ange användarnamn");
+
             int passwordRetry = 0;
+            String potentialUser = JOptionPane.showInputDialog(null, "ange användarnamn");
 
-            if (repository.checkForUser(potentialUser)){
+            if(potentialUser == null){
 
-                while (passwordRetry < 3){
+                System.exit(0);
 
-                    String presentedPassword = JOptionPane.showInputDialog(null, "ange lösenord");
+            } else if (potentialUser.equals("")) {
 
-                    //Lägg till möjlighet att avsluta
+                JOptionPane.showMessageDialog(null,"Fyll i ert användarnamn.");
 
-                    if (repository.checkForPassword(potentialUser, presentedPassword)){
-                        return repository.getAuthenticatedUser(potentialUser);
+            }else{
+
+                if (repository.checkForUser(potentialUser)){
+
+                    while (passwordRetry < 3){
+
+                        String presentedPassword = JOptionPane.showInputDialog(null, "ange lösenord");
+
+                        //Lägg till möjlighet att avsluta
+
+                        if (presentedPassword == null){
+
+                            System.exit(0);
+
+                        }else if(presentedPassword.equals("")){
+
+                            JOptionPane.showMessageDialog(null,"Inget lösenord har angetts");
+
+                        }else{
+
+                            if (repository.checkForPassword(potentialUser, presentedPassword)){
+                                return repository.getAuthenticatedUser(potentialUser);
+                            }
+
+
+                            passwordRetry++;
+
+
+                            if(passwordRetry <3){
+                                JOptionPane.showMessageDialog(null, "Lösenordet du angett är inkorrekt");
+                            }else {
+                                JOptionPane.showMessageDialog(null, "Lösenordet du angett är inkorrekt\nFör många inloggnings försök har gjorts\nInloggnings processen startas om");
+                            }
+                        }
                     }
-                    passwordRetry++;
-                    JOptionPane.showMessageDialog(null, "Lösenordet du angett är inkorrekt");
-
                 }
-
             }
         }
-
-
     }
 
 
