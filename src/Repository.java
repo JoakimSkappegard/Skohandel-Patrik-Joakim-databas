@@ -2,7 +2,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 public class Repository {
@@ -202,8 +201,8 @@ public class Repository {
         }
     }
 
-    public List<Sko> getAvailableSkor(){
-        List<Sko> availableSkor = new ArrayList<Sko>();
+    public ArrayList<Sko> getAvailableSkor(){
+        ArrayList<Sko> availableSkor = new ArrayList<Sko>();
 
         try{
             Connection con = DriverManager.getConnection(url, user,password);
@@ -232,8 +231,6 @@ public class Repository {
             System.out.println(e);
             return null;
         }
-
-
     }
 
     public void addToOrder(int skoId, int antall, int orderid){
@@ -241,7 +238,7 @@ public class Repository {
     }
 
 
-    public int shoesInOrder(String orderId){
+    public int amountOfShoesInOrder(String orderId){
 
         if(orderId == null){
             return 0;
@@ -269,7 +266,6 @@ public class Repository {
         }
 
         return skorIOrder;
+
     }
-
-
 }

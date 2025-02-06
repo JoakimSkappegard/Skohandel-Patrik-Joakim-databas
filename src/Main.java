@@ -1,20 +1,21 @@
 import javax.swing.*;
-import java.sql.*;
+import java.util.ArrayList;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
     Kund activUser;
+    ArrayList<Sko> stock;
 
     public Main (){
         Repository repository = Repository.getInstance();
+        stock = repository.getAvailableSkor();
+        presenteraSkor(stock);
 
-        System.out.println(repository.shoesInOrder(null));
+        laggTillSkoTillOrder(stock);
 
-        System.exit(0);
 
-        System.out.println(meny());
 
         activUser = inloggning();
 
@@ -26,7 +27,9 @@ public class Main {
                     System.exit(0);
                     break;
                 case 0:
-                    //lägg till
+                    stock = repository.getAvailableSkor();
+                    presenteraSkor(stock);
+
                     break;
                 case 1:
                     //betala
@@ -63,7 +66,6 @@ public class Main {
 
                         String presentedPassword = JOptionPane.showInputDialog(null, "ange lösenord");
 
-                        //Lägg till möjlighet att avsluta
 
                         if (presentedPassword == null){
 
@@ -95,12 +97,96 @@ public class Main {
         }
     }
 
-    private void presenteraSkor(){
+    private void presenteraSkor(ArrayList<Sko> stock){
 
+        System.out.println                                  ("--------------------------------SKOR I TILLGÄNGLIGT SORTIMENT-----------------------------------");
+        int presentedNumber = 1;
+
+        for (Sko sko : stock) {
+
+            if (sko.getStock() > 0) {
+                System.out.println                          ("*" + (presentedNumber) + "* " + sko.toString());
+                System.out.println                          ("------------------------------------------------------------------------------------------------");
+                presentedNumber++;
+            }
+        }
     }
 
-    private void laggTillSkoTillOrder(){
-        Repository repository = Repository.getInstance();
+    private void laggTillSkoTillOrder(ArrayList<Sko> stock){
+
+        int choiceint = -1;
+        int chocenShoeId;
+        int amountInt = 0;
+
+        while (true){
+
+            String choise = JOptionPane.showInputDialog(null,"Välj sko ur listan\n Du gör ditt val genom att skriva in numret som anges framför den sko du är intresserad av");
+            if(choise == null){
+                System.exit(0);
+            }
+
+            try{
+
+                choiceint = Integer.parseInt(choise);
+
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(null,"Felaktigt inmatat värde, Var god ange endast siffror.");
+                System.out.println(e);
+                continue;
+            }
+
+            chocenShoeId = findSkoId(stock,choiceint);
+            if(chocenShoeId == -1){
+                JOptionPane.showMessageDialog(null,"Det angivna värdet finns inte representerat i listan");
+                continue;
+            }
+
+            break;
+
+        }
+
+        while (true){
+
+            String amount = JOptionPane.showInputDialog(null,"Hur många av "+ findSkoName(stock,choiceint) +"önskar du köpa");
+            if(amount == null){
+                System.exit(0);
+            }
+
+            try{
+
+                amountInt = Integer.parseInt(amount);
+
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(null, "Felaktigt inmatat värde, Var god ange endast siffror.");
+                System.out.println(e);
+                continue;
+            }
+
+            if (amountInt<0){
+
+                System.out.println("var god ange ett positivt heltal");
+
+            }else if (amountInt==0){
+
+                System.out.println("inga skor har lagts till er order");
+
+            }else if (amountInt>findSkoAmount(stock,chocenShoeId)){
+
+                System.out.println("Det fins inte så många skor på lagret, var god ange ett nytt värde.");
+
+            }else{
+
+
+
+            }
+
+
+            break;
+
+        }
+
+
+
     }
 
 
@@ -112,7 +198,56 @@ public class Main {
         return result;
     }
 
+    private int findSkoId(ArrayList<Sko> stock,int choice){
+        int presentedNumber = 1;
 
+        if(choice == -1){
+            return -1;
+        }
+
+        for (int i = 0; i < stock.size(); i++) {
+
+            if (stock.get(i).getStock() > 0) {
+
+                if(presentedNumber == choice) {
+                    return stock.get(i).getId();
+                }
+                presentedNumber++;
+            }
+        }
+        return -1;
+    }
+
+    private String findSkoName(ArrayList<Sko> stock,int choice){
+        int presentedNumber = 1;
+
+        for (int i = 0; i < stock.size(); i++) {
+
+            if (stock.get(i).getStock() > 0) {
+
+                if(presentedNumber == choice) {
+                    return stock.get(i).getName();
+                }
+                presentedNumber++;
+            }
+        }
+
+        return null;
+
+    }
+
+    private int findSkoAmount(ArrayList<Sko> stock,int skoId){
+
+        for (int i = 0; i < stock.size(); i++) {
+
+            if (stock.get(i).getId() == skoId) {
+                return stock.get(i).getStock();
+            }
+        }
+
+        return -1;
+
+    }
 
 
 
