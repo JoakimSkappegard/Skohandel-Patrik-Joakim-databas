@@ -10,6 +10,10 @@ public class Main {
     public Main (){
         Repository repository = Repository.getInstance();
 
+        System.out.println(repository.shoesInOrder(null));
+
+        System.exit(0);
+
         System.out.println(meny());
 
         activUser = inloggning();
@@ -19,7 +23,7 @@ public class Main {
 
             switch(meny()){
                 case -1, 3:
-                    //avsluta
+                    System.exit(0);
                     break;
                 case 0:
                     //lägg till
@@ -31,25 +35,7 @@ public class Main {
                     //logga ut
                     break;
             }
-
-
-
-
-
-
-
-
-
         }
-
-
-
-        // pressentera lista
-
-
-
-
-
     }
 
     private Kund inloggning (){
@@ -109,8 +95,17 @@ public class Main {
         }
     }
 
+    private void presenteraSkor(){
 
-    public int meny (){
+    }
+
+    private void laggTillSkoTillOrder(){
+        Repository repository = Repository.getInstance();
+    }
+
+
+
+    private int meny (){
         Object[] options = {"Lägg till i order", "Betala activ order", "logga ut", "avsluta"};
 
         int result = JOptionPane.showOptionDialog(null,"Vad önskar du göra?","", JOptionPane.YES_NO_OPTION,3, null,options,options[0]);

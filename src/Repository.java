@@ -1,6 +1,8 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Repository {
@@ -139,10 +141,6 @@ public class Repository {
                 String lastname = rs.getString(4);
                 String userName = rs.getString(5);
                 String activeOrder = rs.getString(7);
-                if (rs.wasNull()) {
-                    //System.out.println("null flag");
-                    // handle NULL field value
-                }
 
 
                 if(username.equals(userName)){
@@ -172,7 +170,7 @@ public class Repository {
 
                 int activeOrderInt = Integer.parseInt(activOrder);
 
-                Connection con = DriverManager.getConnection(url, user,password);
+                Connection con = DriverManager.getConnection(url, user, password);
 
                 Statement stmt = con.createStatement();
 
@@ -202,13 +200,76 @@ public class Repository {
 
             }
         }
+    }
 
+    public List<Sko> getAvailableSkor(){
+        List<Sko> availableSkor = new ArrayList<Sko>();
 
+        try{
+            Connection con = DriverManager.getConnection(url, user,password);
 
+            Statement stmt = con.createStatement();
+
+            ResultSet rs = stmt.executeQuery("select * from SkoVy");
+
+            while (rs.next()){
+                int Id = rs.getInt(1);
+                String name = rs.getString(2);
+                String brand = rs.getString(3);
+                String Category = rs.getString(4);
+                String colour = rs.getString(5);
+                int size = rs.getInt(6);
+                float price = rs.getFloat(7);
+                int stock = rs.getInt(8);
+
+                Sko sko = new Sko(Id, name, brand, Category, colour, size, price, stock);
+                availableSkor.add(sko);
+            }
+
+            return availableSkor;
+
+        }catch (SQLException e){
+            System.out.println(e);
+            return null;
+        }
 
 
     }
 
+    public void addToOrder(int skoId, int antall, int orderid){
+
+    }
+
+
+    public int shoesInOrder(String orderId){
+
+        if(orderId == null){
+            return 0;
+        }
+
+        int skorIOrder = 0;
+
+        try{
+
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stmt = con.createStatement();
+
+            ResultSet rs = stmt.executeQuery("select BeställningsId, Antal  from iBeställning");
+
+            while (rs.next()){
+                if(orderId.equals(rs.getString(1))){
+                    skorIOrder = skorIOrder+rs.getInt(2);
+                }
+            }
+
+        }catch (SQLException e){
+            System.out.println(e);
+            return-1;
+        }
+
+        return skorIOrder;
+    }
 
 
 }
