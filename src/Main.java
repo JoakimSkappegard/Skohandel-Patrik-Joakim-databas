@@ -17,7 +17,9 @@ public class Main {
 
         presenteraSkor(stock);
 
-        laggTillSkoTillOrder(stock);
+        repository.payOrder(activUser);
+
+        //laggTillSkoTillOrder(stock);
 
         //**************************************************
 

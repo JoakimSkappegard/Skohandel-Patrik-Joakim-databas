@@ -246,17 +246,19 @@ public class Repository {
 
         try(Connection con = DriverManager.getConnection(url, user, password);
 
-            PreparedStatement stmt = con.prepareStatement(
-                    "EXEC LäggTillBeställning(AktivOrderId,Datum,KundId,SkoId,Antal) values(?,?,?,?,?)"
+            CallableStatement stmt = con.prepareCall(
+                    "CALL LäggTillBeställning(?,?,?,?,?)"
             );
 
         ){
 
-            stmt.setString(1, kund.getActivOrder() );
+            stmt.setString(1, kund.getActivOrder());
             stmt.setString(2, String.valueOf(LocalDate.now()));
             stmt.setInt(3, kund.getId());
             stmt.setInt(4, skoId);
             stmt.setInt(5, antall);
+            stmt.execute();
+            System.out.println("felsök2???");
 
         }catch (SQLException e){
             System.out.println(e);
@@ -266,7 +268,21 @@ public class Repository {
     }
 
     public void payOrder(Kund kund){
+        try(Connection con = DriverManager.getConnection(url, user, password);
 
+            CallableStatement stmt = con.prepareCall(
+                    "CALL AvslutaBeställning(?)"
+            );
+
+        ){
+            stmt.setString(1, kund.getActivOrder());
+            stmt.execute();
+            System.out.println("klar");
+
+
+        }catch (SQLException e){
+            System.out.println(e);
+        }
 
     }
 

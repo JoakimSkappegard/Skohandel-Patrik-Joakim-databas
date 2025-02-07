@@ -23,7 +23,7 @@ public class Kund {
             this.name = "Anna";
             this.lastname = "Långström";
             this.userName = "AnnaLångström";
-            this.activOrder = null;
+            this.activOrder = "11";
 
         }
     }
