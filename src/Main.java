@@ -10,10 +10,16 @@ public class Main {
 
     public Main (){
         Repository repository = Repository.getInstance();
+
+        activUser = new Kund(true);
+
         stock = repository.getAvailableSkor();
+
         presenteraSkor(stock);
 
         laggTillSkoTillOrder(stock);
+
+        //**************************************************
 
 
 
@@ -114,6 +120,8 @@ public class Main {
 
     private void laggTillSkoTillOrder(ArrayList<Sko> stock){
 
+        Repository repository = Repository.getInstance();
+
         int choiceint = -1;
         int chocenShoeId;
         int amountInt = 0;
@@ -147,7 +155,7 @@ public class Main {
 
         while (true){
 
-            String amount = JOptionPane.showInputDialog(null,"Hur många av "+ findSkoName(stock,choiceint) +"önskar du köpa");
+            String amount = JOptionPane.showInputDialog(null,"Hur många av "+ findSkoName(stock,choiceint) +" önskar du köpa");
             if(amount == null){
                 System.exit(0);
             }
@@ -184,6 +192,8 @@ public class Main {
             break;
 
         }
+
+        repository.addToOrder(chocenShoeId,amountInt,activUser);
 
 
 

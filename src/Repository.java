@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -26,13 +27,14 @@ public class Repository {
     }
 
     public void getkundlista(){
-        try{
-            Connection con = DriverManager.getConnection(url, user,password);
+        try(Connection con = DriverManager.getConnection(url, user,password);
 
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("select * from Kund");
 
+
+        ){
             while (rs.next()){
                 int id = rs.getInt(1);
                 String ort = rs.getString(2); //är en int, verkar fungera ändå. interessant
@@ -68,13 +70,12 @@ public class Repository {
     }
 
     public boolean checkForUser(String username){
-        try{
-            Connection con = DriverManager.getConnection(url, user,password);
-
+        try(Connection con = DriverManager.getConnection(url, user,password);
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("select AnvändarNamn from Kund");
 
+        ){
             while (rs.next()){
                 String knownUser = rs.getString(1);
 
@@ -96,12 +97,15 @@ public class Repository {
     }
 
     public boolean checkForPassword(String username, String givenPassword){
-        try{
-            Connection con = DriverManager.getConnection(url, user,password);
+
+        try(Connection con = DriverManager.getConnection(url, user,password);
 
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("select AnvändarNamn, Lösenord from Kund");
+        ){
+
+
 
             while (rs.next()){
 
@@ -126,13 +130,13 @@ public class Repository {
     }
 
     public Kund getAuthenticatedUser (String username){
-        try{
-            Connection con = DriverManager.getConnection(url, user,password);
+        try(Connection con = DriverManager.getConnection(url, user,password);
 
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("select * from Kund");
 
+        ){
             while (rs.next()){
                 int id = rs.getInt(1);
                 String ort = rs.getString(2); //är en int, verkar fungera ändå. interessant
@@ -161,19 +165,22 @@ public class Repository {
     public void presentCurrentOrder(String activOrder){
 
         if (activOrder == null){
+
             System.out.println("****************************************\n\n\nDu har för nuvarande ingen aktiv order\n\n\n****************************************");
+
         }else{
-            try{
 
-                float totalpris = 0;
-
-                int activeOrderInt = Integer.parseInt(activOrder);
-
-                Connection con = DriverManager.getConnection(url, user, password);
+            try(Connection con = DriverManager.getConnection(url, user, password);
 
                 Statement stmt = con.createStatement();
 
                 ResultSet rs = stmt.executeQuery("select * from Beställningar");
+
+            ){
+
+                float totalpris = 0;
+
+                int activeOrderInt = Integer.parseInt(activOrder);
 
                 System.out.println("****************************************\n\nDin aktiva order innehåller:");
 
@@ -204,12 +211,12 @@ public class Repository {
     public ArrayList<Sko> getAvailableSkor(){
         ArrayList<Sko> availableSkor = new ArrayList<Sko>();
 
-        try{
-            Connection con = DriverManager.getConnection(url, user,password);
-
+        try(Connection con = DriverManager.getConnection(url, user, password);
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("select * from SkoVy");
+
+        ){
 
             while (rs.next()){
                 int Id = rs.getInt(1);
@@ -233,7 +240,33 @@ public class Repository {
         }
     }
 
-    public void addToOrder(int skoId, int antall, int orderid){
+    public void addToOrder(int skoId, int antall, Kund kund){
+
+        System.out.println("felsök1");
+
+        try(Connection con = DriverManager.getConnection(url, user, password);
+
+            PreparedStatement stmt = con.prepareStatement(
+                    "EXEC LäggTillBeställning(AktivOrderId,Datum,KundId,SkoId,Antal) values(?,?,?,?,?)"
+            );
+
+        ){
+
+            stmt.setString(1, kund.getActivOrder() );
+            stmt.setString(2, String.valueOf(LocalDate.now()));
+            stmt.setInt(3, kund.getId());
+            stmt.setInt(4, skoId);
+            stmt.setInt(5, antall);
+
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+
+
+    }
+
+    public void payOrder(Kund kund){
+
 
     }
 
