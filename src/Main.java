@@ -5,30 +5,21 @@ import java.util.ArrayList;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-    Kund activUser;
-    ArrayList<Sko> stock;
+    private Kund activeUser;
+    private ArrayList<Sko> stock;
+    private Order activeOrder;
 
     public Main (){
         Repository repository = Repository.getInstance();
 
-        activUser = new Kund(true);
-
-        stock = repository.getAvailableSkor();
-
-        presenteraSkor(stock);
-
-        repository.payOrder(activUser);
-
-        //laggTillSkoTillOrder(stock);
-
-        //**************************************************
-
-
-
-        activUser = inloggning();
+        activeUser = inloggning();
 
         while (true){
-            repository.presentCurrentOrder(activUser.activOrder);
+            boolean loggoutFlagg = false;
+//            activeOrder = repository.getOrder(activeUser.getActivOrder());
+//            activeOrder.presentCurrentOrder(activeUser);
+
+            repository.presentCurrentOrder(activeUser.getActivOrder());
 
             switch(meny()){
                 case -1, 3:
@@ -37,14 +28,18 @@ public class Main {
                 case 0:
                     stock = repository.getAvailableSkor();
                     presenteraSkor(stock);
-
+                    laggTillSkoTillOrder(stock);
                     break;
                 case 1:
-                    //betala
+                    repository.payOrder(activeUser);
+                    updateUser(activeUser);
                     break;
                 case 2:
-                    //logga ut
+                    loggoutFlagg = true;
                     break;
+            }
+            if(loggoutFlagg){
+                break;
             }
         }
     }
@@ -127,6 +122,8 @@ public class Main {
         int choiceint = -1;
         int chocenShoeId;
         int amountInt = 0;
+        int shoesInOrderBefore;
+        int expectedShoesInOrder;
 
         while (true){
 
@@ -195,9 +192,19 @@ public class Main {
 
         }
 
-        repository.addToOrder(chocenShoeId,amountInt,activUser);
+        shoesInOrderBefore = repository.amountOfShoesInOrder(activeUser.getActivOrder());
 
+        expectedShoesInOrder = (shoesInOrderBefore+amountInt);
 
+        repository.addToOrder(chocenShoeId,amountInt, activeUser);
+
+        if(expectedShoesInOrder == repository.amountOfShoesInOrder(activeUser.getActivOrder())){
+            System.out.println("Varorna har lagts till till din order");
+        }else{
+            System.out.println("Något gick fel vid uppdateringen av din order");
+        }
+
+        updateUser(activeUser);
 
     }
 
@@ -259,6 +266,11 @@ public class Main {
 
         return -1;
 
+    }
+
+    private Kund updateUser(Kund activeUser){
+        Repository repository = Repository.getInstance();
+        return repository.getAuthenticatedUser(this.activeUser.getUserName());
     }
 
 

@@ -1,7 +1,6 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -9,10 +8,10 @@ public class Repository {
 
     private static Repository instance;
 
-    Properties properties;
-    String user;
-    String password;
-    String url;
+    private Properties properties;
+    private String user;
+    private String password;
+    private String url;
 
     private Repository (){
         properties = new Properties();
@@ -162,6 +161,45 @@ public class Repository {
         }
     }
 
+    public Order getOrder(String orderId){
+
+        ArrayList<Sko> shoesInOrder = new ArrayList<>();
+
+        if(orderId == null){
+            return new Order();
+        }else{
+            try(Connection con = DriverManager.getConnection(url, user, password);
+
+                Statement stmt = con.createStatement();
+
+                ResultSet rs = stmt.executeQuery("select * from Beställningar");
+
+            ) {
+
+
+                int activeOrderInt = Integer.parseInt(orderId);
+
+                while (rs.next()) {
+
+                    int id = rs.getInt(1);
+                    String pruduktNamn = rs.getString(3);
+                    int antall = rs.getInt(4);
+                    float pris = rs.getFloat(5);
+
+
+                    if (id == activeOrderInt) {
+                        Sko shoe = new Sko(pruduktNamn, antall, pris);
+                        shoesInOrder.add(shoe);
+                    }
+                }
+
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+            return new Order(shoesInOrder);
+        }
+    }
+
     public void presentCurrentOrder(String activOrder){
 
         if (activOrder == null){
@@ -242,23 +280,20 @@ public class Repository {
 
     public void addToOrder(int skoId, int antall, Kund kund){
 
-        System.out.println("felsök1");
 
         try(Connection con = DriverManager.getConnection(url, user, password);
 
             CallableStatement stmt = con.prepareCall(
-                    "CALL LäggTillBeställning(?,?,?,?,?)"
+                    "CALL LäggTillBeställning(?,?,?,?)"
             );
 
         ){
 
             stmt.setString(1, kund.getActivOrder());
-            stmt.setString(2, String.valueOf(LocalDate.now()));
-            stmt.setInt(3, kund.getId());
-            stmt.setInt(4, skoId);
-            stmt.setInt(5, antall);
+            stmt.setInt(2, kund.getId());
+            stmt.setInt(3, skoId);
+            stmt.setInt(4, antall);
             stmt.execute();
-            System.out.println("felsök2???");
 
         }catch (SQLException e){
             System.out.println(e);
@@ -277,7 +312,7 @@ public class Repository {
         ){
             stmt.setString(1, kund.getActivOrder());
             stmt.execute();
-            System.out.println("klar");
+            System.out.println("Din order är nu betald!");
 
 
         }catch (SQLException e){

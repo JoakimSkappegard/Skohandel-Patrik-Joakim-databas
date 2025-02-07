@@ -1,12 +1,13 @@
 public class Sko {
-    int id;
-    String name;
-    String brand;
-    String category;
-    String colour;
-    int size;
-    float price;
-    int stock;
+    private int id;
+    private String name;
+    private String brand;
+    private String category;
+    private String colour;
+    private int size;
+    private float price;
+    private int stock;
+    private int amountInOrder;
 
     public Sko(int id, String name, String brand, String category, String colour, int size, float price, int stock) {
         this.id = id;
@@ -17,6 +18,12 @@ public class Sko {
         this.size = size;
         this.price = price;
         this.stock = stock;
+    }
+
+    public Sko(String name,int amountInOrder, float totalPris){
+        this.name = name;
+        this.amountInOrder = amountInOrder;
+        this.price = totalPris;
     }
 
     @Override
@@ -87,5 +94,13 @@ public class Sko {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public int getAmountInOrder() {
+        return amountInOrder;
+    }
+
+    public void setAmountInOrder(int amountInOrder) {
+        this.amountInOrder = amountInOrder;
     }
 }

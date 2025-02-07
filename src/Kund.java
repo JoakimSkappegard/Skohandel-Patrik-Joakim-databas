@@ -1,10 +1,10 @@
 public class Kund {
-    int id;
-    String ort;
-    String name;
-    String lastname;
-    String userName;
-    String activOrder;
+    private int id;
+    private String ort;
+    private String name;
+    private String lastname;
+    private String userName;
+    private String activOrder;
 
     public Kund(int id, String ort, String name, String lastname, String userName, String activOrder) {
         this.id = id;
@@ -15,18 +15,18 @@ public class Kund {
         this.activOrder = activOrder;
     }
 
-    public Kund (boolean dummy){
-        if(dummy){
-
-            this.id = 1;
-            this.ort = "Kopparberg";
-            this.name = "Anna";
-            this.lastname = "Långström";
-            this.userName = "AnnaLångström";
-            this.activOrder = "11";
-
-        }
-    }
+//    public Kund (boolean dummy){
+//        if(dummy){
+//
+//            this.id = 1;
+//            this.ort = "Kopparberg";
+//            this.name = "Anna";
+//            this.lastname = "Långström";
+//            this.userName = "AnnaLångström";
+//            this.activOrder = null;
+//
+//        }
+//    }
 
     public int getId() {
         return id;
