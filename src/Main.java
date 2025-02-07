@@ -12,34 +12,37 @@ public class Main {
     public Main (){
         Repository repository = Repository.getInstance();
 
-        activeUser = inloggning();
+        while(true){
 
-        while (true){
-            boolean loggoutFlagg = false;
+            activeUser = inloggning();
+
+            while (true){
+                boolean loggoutFlagg = false;
 //            activeOrder = repository.getOrder(activeUser.getActivOrder());
 //            activeOrder.presentCurrentOrder(activeUser);
 
-            repository.presentCurrentOrder(activeUser.getActivOrder());
+                repository.presentCurrentOrder(activeUser.getActivOrder());
 
-            switch(meny()){
-                case -1, 3:
-                    System.exit(0);
+                switch(meny()){
+                    case -1, 3:
+                        System.exit(0);
+                        break;
+                    case 0:
+                        stock = repository.getAvailableSkor();
+                        presenteraSkor(stock);
+                        laggTillSkoTillOrder(stock);
+                        break;
+                    case 1:
+                        repository.payOrder(activeUser);
+                        updateUser();
+                        break;
+                    case 2:
+                        loggoutFlagg = true;
+                        break;
+                }
+                if(loggoutFlagg){
                     break;
-                case 0:
-                    stock = repository.getAvailableSkor();
-                    presenteraSkor(stock);
-                    laggTillSkoTillOrder(stock);
-                    break;
-                case 1:
-                    repository.payOrder(activeUser);
-                    updateUser(activeUser);
-                    break;
-                case 2:
-                    loggoutFlagg = true;
-                    break;
-            }
-            if(loggoutFlagg){
-                break;
+                }
             }
         }
     }
@@ -182,29 +185,26 @@ public class Main {
                 System.out.println("Det fins inte så många skor på lagret, var god ange ett nytt värde.");
 
             }else{
+                shoesInOrderBefore = repository.amountOfShoesInOrder(activeUser.getActivOrder());
 
+                expectedShoesInOrder = (shoesInOrderBefore+amountInt);
 
+                repository.addToOrder(chocenShoeId,amountInt, activeUser);
 
+                if(expectedShoesInOrder == repository.amountOfShoesInOrder(activeUser.getActivOrder())){
+                    System.out.println("Varorna har lagts till till din order");
+                }else{
+                    System.out.println("Något gick fel vid uppdateringen av din order");
+                }
+
+                break;
             }
 
 
-            break;
 
         }
 
-        shoesInOrderBefore = repository.amountOfShoesInOrder(activeUser.getActivOrder());
-
-        expectedShoesInOrder = (shoesInOrderBefore+amountInt);
-
-        repository.addToOrder(chocenShoeId,amountInt, activeUser);
-
-        if(expectedShoesInOrder == repository.amountOfShoesInOrder(activeUser.getActivOrder())){
-            System.out.println("Varorna har lagts till till din order");
-        }else{
-            System.out.println("Något gick fel vid uppdateringen av din order");
-        }
-
-        updateUser(activeUser);
+        updateUser();
 
     }
 
@@ -268,9 +268,9 @@ public class Main {
 
     }
 
-    private Kund updateUser(Kund activeUser){
+    private void updateUser(){
         Repository repository = Repository.getInstance();
-        return repository.getAuthenticatedUser(this.activeUser.getUserName());
+        this.activeUser = repository.getAuthenticatedUser(this.activeUser.getUserName());
     }
 
 
