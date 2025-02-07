@@ -200,51 +200,6 @@ public class Repository {
         }
     }
 
-    public void presentCurrentOrder(String activOrder){
-
-        if (activOrder == null){
-
-            System.out.println("****************************************\n\n\nDu har för nuvarande ingen aktiv order\n\n\n****************************************");
-
-        }else{
-
-            try(Connection con = DriverManager.getConnection(url, user, password);
-
-                Statement stmt = con.createStatement();
-
-                ResultSet rs = stmt.executeQuery("select * from Beställningar");
-
-            ){
-
-                float totalpris = 0;
-
-                int activeOrderInt = Integer.parseInt(activOrder);
-
-                System.out.println("****************************************\n\nDin aktiva order innehåller:");
-
-                while (rs.next()){
-
-                    int id = rs.getInt(1);
-                    String pruduktNamn = rs.getString(3);
-                    int antall = rs.getInt(4);
-                    float pris = rs.getFloat(5);
-
-
-                    if(id==activeOrderInt){
-                        System.out.println("prudukt: "+pruduktNamn.toUpperCase()+"| antall: "+antall+"| pris: "+pris);
-                        totalpris = (totalpris+pris);
-                    }
-                }
-
-                System.out.println("\nTottalsumman på din order är: "+totalpris+" Kr\n\n****************************************");
-
-
-            }catch (SQLException e){
-                System.out.println(e);
-
-            }
-        }
-    }
 
     public ArrayList<Sko> getAvailableSkor(){
         ArrayList<Sko> availableSkor = new ArrayList<Sko>();

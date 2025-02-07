@@ -18,10 +18,10 @@ public class Main {
 
             while (true){
                 boolean loggoutFlagg = false;
-//            activeOrder = repository.getOrder(activeUser.getActivOrder());
-//            activeOrder.presentCurrentOrder(activeUser);
+                activeOrder = repository.getOrder(activeUser.getActivOrder());
+                activeOrder.presentCurrentOrder(activeUser);
 
-                repository.presentCurrentOrder(activeUser.getActivOrder());
+//                repository.presentCurrentOrder(activeUser.getActivOrder());
 
                 switch(meny()){
                     case -1, 3:
